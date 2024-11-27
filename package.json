@@ -1,0 +1,37 @@
+{
+  "name": "ses-sync",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sync email templates to Amazon Simple Email Service (SES)",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "all": "npm run build && npm run format && npm run lint && npm run package"
+  },
+  "keywords": [],
+  "author": "Oliver Siegmar",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@aws-sdk/client-sesv2": "^3.699.0",
+    "async": "^3.2.6",
+    "mime-types": "^2.1.35",
+    "minimatch": "^10.0.1"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2.1.4",
+    "@types/node": "^22.7.5",
+    "@vercel/ncc": "^0.38.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-github": "^5.0.2",
+    "eslint-plugin-jest": "^28.8.3",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  }
+}

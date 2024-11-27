@@ -1,0 +1,13 @@
+name: 'SES Sync'
+author: 'Oliver Siegmar'
+description: 'Sync email templates to Amazon Simple Email Service (SES)'
+inputs:
+  dir:
+    description: 'Source directory read files from'
+    required: true
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+branding:
+  icon: upload-cloud
+  color: blue
