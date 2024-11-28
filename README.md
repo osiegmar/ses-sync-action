@@ -22,7 +22,7 @@ The template configuration file has to be a JSON file with the following structu
 
 ```json
 {
-  "Subject": "Subject of the E-Mail"
+  "subject": "Subject of the E-Mail"
 }
 ```
 
