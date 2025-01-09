@@ -17,10 +17,10 @@ export class SES {
         this.wait = new Wait()
     }
 
-    async listTemplates(): Promise<string[]> {
-        // SES allows 1 request per second
-        await this.wait.wait('list-templates', 1000)
+    // SES allows 1 request per second. Another 100ms is added to be safe (experienced rate errors otherwise).
+    private readonly _wait_duration = 1100
 
+    async listTemplates(): Promise<string[]> {
         let templates: string[] = []
 
         let NextToken = undefined
@@ -55,8 +55,8 @@ export class SES {
     async createTemplate(localTemplate: LocalTemplate): Promise<void> {
         core.info(`Creating template ${localTemplate.basename}`)
 
-        // SES allows 1 request per second
-        await this.wait.wait('create-template', 1000)
+        // Ensure we don't exceed the SES rate limit
+        await this.wait.wait('create-template', this._wait_duration)
 
         const command = new CreateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
@@ -77,8 +77,8 @@ export class SES {
     async updateTemplate(localTemplate: LocalTemplate): Promise<void> {
         core.info(`Updating template ${localTemplate.basename}`)
 
-        // SES allows 1 request per second
-        await this.wait.wait('update-template', 1000)
+        // Ensure we don't exceed the SES rate limit
+        await this.wait.wait('update-template', this._wait_duration)
 
         const command = new UpdateEmailTemplateCommand({
             TemplateName: localTemplate.basename,

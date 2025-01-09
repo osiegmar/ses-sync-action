@@ -98,13 +98,13 @@ const wait_1 = __nccwpck_require__(6339);
 const core = __importStar(__nccwpck_require__(7484));
 class SES {
     constructor() {
+        // SES allows 1 request per second. Another 100ms is added to be safe (experienced rate errors otherwise).
+        this._wait_duration = 1100;
         this.client = new client_sesv2_1.SESv2Client({});
         this.wait = new wait_1.Wait();
     }
     async listTemplates() {
         var _a;
-        // SES allows 1 request per second
-        await this.wait.wait('list-templates', 1000);
         let templates = [];
         let NextToken = undefined;
         for (;;) {
@@ -131,8 +131,8 @@ class SES {
     }
     async createTemplate(localTemplate) {
         core.info(`Creating template ${localTemplate.basename}`);
-        // SES allows 1 request per second
-        await this.wait.wait('create-template', 1000);
+        // Ensure we don't exceed the SES rate limit
+        await this.wait.wait('create-template', this._wait_duration);
         const command = new client_sesv2_1.CreateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
             TemplateContent: {
@@ -149,8 +149,8 @@ class SES {
     }
     async updateTemplate(localTemplate) {
         core.info(`Updating template ${localTemplate.basename}`);
-        // SES allows 1 request per second
-        await this.wait.wait('update-template', 1000);
+        // Ensure we don't exceed the SES rate limit
+        await this.wait.wait('update-template', this._wait_duration);
         const command = new client_sesv2_1.UpdateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
             TemplateContent: {
