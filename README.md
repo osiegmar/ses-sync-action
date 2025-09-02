@@ -12,11 +12,12 @@ A very basic configuration for syncing templates from a directory `templates` to
 
 The directory `templates` has to contain the following three files for each template:
 
-- `[basename].json`: A template configuration file.
+- `[basename].json`: The template configuration file.
 - `[basename].txt`: The plain text body of the E-Mail.
 - `[basename].html`: The HTML body of the E-Mail.
 
 The `[basename]` is the name of the template and has to be the same for all three files.
+It is used to identify the template in SES.
 
 The template configuration file has to be a JSON file with the following structure:
 
