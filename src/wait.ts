@@ -17,6 +17,6 @@ export class Wait {
             core.info(`Waiting ${timeToWait} milliseconds in scope ${scope}`)
             setTimeout(resolve, timeToWait)
         })
-        this.scopes.set(scope, currentTime + milliseconds)
+        this.scopes.set(scope, Date.now() + milliseconds)
     }
 }

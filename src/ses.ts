@@ -56,7 +56,7 @@ export class SES {
         core.info(`Creating template ${localTemplate.basename}`)
 
         // Ensure we don't exceed the SES rate limit
-        await this.wait.wait('create-template', this._wait_duration)
+        await this.wait.wait('ses', this._wait_duration)
 
         const command = new CreateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
@@ -78,7 +78,7 @@ export class SES {
         core.info(`Updating template ${localTemplate.basename}`)
 
         // Ensure we don't exceed the SES rate limit
-        await this.wait.wait('update-template', this._wait_duration)
+        await this.wait.wait('ses', this._wait_duration)
 
         const command = new UpdateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
