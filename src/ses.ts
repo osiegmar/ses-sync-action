@@ -17,8 +17,8 @@ export class SES {
         this.wait = new Wait()
     }
 
-    // SES allows 1 request per second. Another 100ms is added to be safe (experienced rate errors otherwise).
-    private readonly _wait_duration = 1100
+    // SES allows 1 request per second. Another 500ms is added to be safe (experienced rate errors otherwise).
+    private readonly _wait_duration = 1500
 
     async listTemplates(): Promise<string[]> {
         let templates: string[] = []
