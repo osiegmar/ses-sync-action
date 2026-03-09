@@ -17,8 +17,8 @@ export class SES {
         this.wait = new Wait()
     }
 
-    // SES allows 1 request per second. Another 500ms is added to be safe (experienced rate errors otherwise).
-    private readonly _wait_duration = 1500
+    // SES allows 1 request per second. Another 100ms is added to be safe.
+    private readonly _wait_duration = 1100
 
     async listTemplates(): Promise<string[]> {
         let templates: string[] = []
@@ -68,6 +68,9 @@ export class SES {
         })
         const response = await this.client.send(command)
 
+        // Track time after the API call so the next wait measures from call completion
+        this.wait.track('ses', this._wait_duration)
+
         if (response.$metadata.httpStatusCode !== 200) {
             throw new Error(`Failed to create template ${localTemplate.basename}:
                 SES responded with status ${response.$metadata.httpStatusCode}`)
@@ -89,6 +92,9 @@ export class SES {
             }
         })
         const response = await this.client.send(command)
+
+        // Track time after the API call so the next wait measures from call completion
+        this.wait.track('ses', this._wait_duration)
 
         if (response.$metadata.httpStatusCode !== 200) {
             throw new Error(`Failed to update template ${localTemplate.basename}:

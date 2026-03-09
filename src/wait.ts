@@ -8,7 +8,6 @@ export class Wait {
         const currentTime = Date.now()
 
         if (nextCall === undefined || nextCall <= currentTime) {
-            this.scopes.set(scope, currentTime + milliseconds)
             return
         }
 
@@ -17,6 +16,9 @@ export class Wait {
             core.info(`Waiting ${timeToWait} milliseconds in scope ${scope}`)
             setTimeout(resolve, timeToWait)
         })
+    }
+
+    track(scope: string, milliseconds: number): void {
         this.scopes.set(scope, Date.now() + milliseconds)
     }
 }
