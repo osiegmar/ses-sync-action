@@ -4,21 +4,16 @@ import {
     SESv2Client,
     UpdateEmailTemplateCommand
 } from '@aws-sdk/client-sesv2'
-import {Wait} from './wait'
 import * as core from '@actions/core'
 import {LocalTemplate} from './templates'
 
 export class SES {
     private client: SESv2Client
-    private wait: Wait
 
     constructor() {
-        this.client = new SESv2Client({})
-        this.wait = new Wait()
+        // SES template API is limited to 1 request per second
+        this.client = new SESv2Client({maxAttempts: 10})
     }
-
-    // SES allows 1 request per second. Another 100ms is added to be safe.
-    private readonly _wait_duration = 1100
 
     async listTemplates(): Promise<string[]> {
         let templates: string[] = []
@@ -55,9 +50,6 @@ export class SES {
     async createTemplate(localTemplate: LocalTemplate): Promise<void> {
         core.info(`Creating template ${localTemplate.basename}`)
 
-        // Ensure we don't exceed the SES rate limit
-        await this.wait.wait('ses', this._wait_duration)
-
         const command = new CreateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
             TemplateContent: {
@@ -68,9 +60,6 @@ export class SES {
         })
         const response = await this.client.send(command)
 
-        // Track time after the API call so the next wait measures from call completion
-        this.wait.track('ses', this._wait_duration)
-
         if (response.$metadata.httpStatusCode !== 200) {
             throw new Error(`Failed to create template ${localTemplate.basename}:
                 SES responded with status ${response.$metadata.httpStatusCode}`)
@@ -79,9 +68,6 @@ export class SES {
 
     async updateTemplate(localTemplate: LocalTemplate): Promise<void> {
         core.info(`Updating template ${localTemplate.basename}`)
-
-        // Ensure we don't exceed the SES rate limit
-        await this.wait.wait('ses', this._wait_duration)
 
         const command = new UpdateEmailTemplateCommand({
             TemplateName: localTemplate.basename,
@@ -92,9 +78,6 @@ export class SES {
             }
         })
         const response = await this.client.send(command)
-
-        // Track time after the API call so the next wait measures from call completion
-        this.wait.track('ses', this._wait_duration)
 
         if (response.$metadata.httpStatusCode !== 200) {
             throw new Error(`Failed to update template ${localTemplate.basename}:
