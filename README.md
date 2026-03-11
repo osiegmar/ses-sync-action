@@ -1,6 +1,6 @@
 # SES Sync Action
 
-GitHub Action to sync E-Mail templates to Amazon Simple Email Service (SES).
+GitHub Action to sync email templates to Amazon Simple Email Service (SES).
 
 A very basic configuration for syncing templates from a directory `templates` to
 SES:
@@ -15,8 +15,8 @@ The directory `templates` has to contain the following three files for each
 template:
 
 - `[basename].json`: The template configuration file.
-- `[basename].txt`: The plain text body of the E-Mail.
-- `[basename].html`: The HTML body of the E-Mail.
+- `[basename].txt`: The plain text body of the email.
+- `[basename].html`: The HTML body of the email.
 
 The `[basename]` is the name of the template and has to be the same for all
 three files. It is used to identify the template in SES.
@@ -26,7 +26,7 @@ structure:
 
 ```json
 {
-  "subject": "Subject of the E-Mail"
+  "subject": "Subject of the email"
 }
 ```
 
