@@ -1,3 +1,11 @@
-/node_modules/
-/.idea/
-/lib/
+node_modules/
+lib/
+coverage/
+*.lcov
+
+.idea/
+.DS_Store
+*.tsbuildinfo
+
+.env
+.env.test
