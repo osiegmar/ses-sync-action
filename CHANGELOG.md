@@ -22,6 +22,20 @@ and this project adheres to
   TypeScript 6.
 - Updated GitHub Actions used in workflows to their latest major versions.
 
+## [2.0.0] - 2026-03-12
+
+### Changed
+
+- **Breaking:** The action now runs on Node.js 24 (`runs.using: node24`) instead
+  of Node.js 20. Self-hosted runners must support the `node24` runtime. Update
+  references from `@v1` to `@v2`.
+- Updated `@actions/core` to 3.x and `@aws-sdk/client-sesv2` to 3.1000+.
+- The bundled action is now an ES module built with Rollup.
+
+### Removed
+
+- Dropped the unused `async` and `mime-types` runtime dependencies.
+
 ## [1.0.2] - 2026-03-11
 
 ### Fixed
@@ -47,6 +61,7 @@ and this project adheres to
 - Initial release.
 
 [2.0.1]: https://github.com/osiegmar/ses-sync-action/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/osiegmar/ses-sync-action/compare/v1.0.2...v2.0.0
 [1.0.2]: https://github.com/osiegmar/ses-sync-action/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/osiegmar/ses-sync-action/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/osiegmar/ses-sync-action/releases/tag/v1.0.0
