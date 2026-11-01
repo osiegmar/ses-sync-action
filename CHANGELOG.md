@@ -8,7 +8,22 @@ and this project adheres to
 
 ## [Unreleased]
 
-- Nothing yet
+### Security
+
+- Updated the bundled `undici` to 6.29.1 to fix multiple vulnerabilities (TLS
+  certificate validation bypass, denial of service via EventSource parsing,
+  content encodings, TLS renegotiation and WebSocket PONG buffering).
+
+### Changed
+
+- Updated `@aws-sdk/client-sesv2` to 3.1161.0.
+- Templates missing their `.html` or `.txt` file, or a string `subject` in their
+  `.json` file, now fail with a clear error message.
+
+### Fixed
+
+- The action now fails when an error that is not an `Error` instance is thrown;
+  previously it silently succeeded.
 
 ## [2.0.1] - 2026-09-27
 
