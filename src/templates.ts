@@ -7,6 +7,11 @@ export async function findTemplates(srcDir: string): Promise<LocalTemplate[]> {
   for (const file of files) {
     if (file.endsWith('.json')) {
       const basename = file.substring(0, file.length - 5)
+      for (const ext of ['html', 'txt']) {
+        if (!files.includes(`${basename}.${ext}`)) {
+          throw new Error(`Template ${basename} is missing ${basename}.${ext}`)
+        }
+      }
       templates.push(new LocalTemplate(srcDir, basename))
     }
   }
@@ -33,6 +38,11 @@ export class LocalTemplate {
       'utf8'
     )
     const data = JSON.parse(config)
+    if (typeof data.subject !== 'string') {
+      throw new Error(
+        `Template ${this._basename}.json lacks a string "subject" property`
+      )
+    }
     return data.subject
   }
 

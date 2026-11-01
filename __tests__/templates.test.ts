@@ -46,6 +46,21 @@ describe('findTemplates', () => {
     expect(templates[0].basename).toBe('welcome')
   })
 
+  it.each(['html', 'txt'])(
+    'should throw when the .%s file is missing',
+    async (ext) => {
+      mockReaddirSync.mockReturnValue(
+        ['welcome.json', 'welcome.html', 'welcome.txt'].filter(
+          (f) => !f.endsWith(`.${ext}`)
+        )
+      )
+
+      await expect(findTemplates('/templates')).rejects.toThrow(
+        `Template welcome is missing welcome.${ext}`
+      )
+    }
+  )
+
   it('should return empty array for empty directory', async () => {
     mockReaddirSync.mockReturnValue([])
 
@@ -71,6 +86,18 @@ describe('LocalTemplate', () => {
       'utf8'
     )
   })
+
+  it.each(['{}', '{"subject":42}'])(
+    'should throw on missing or invalid subject in %s',
+    (json) => {
+      mockReadFileSync.mockReturnValue(json)
+
+      const template = new LocalTemplate('/templates', 'welcome')
+      expect(() => template.subject).toThrow(
+        'Template welcome.json lacks a string "subject" property'
+      )
+    }
+  )
 
   it('should read html body', () => {
     mockReadFileSync.mockReturnValue('<h1>Hello</h1>')
