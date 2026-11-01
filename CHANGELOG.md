@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Nothing yet
+
+## [2.0.2] - 2026-11-01
+
 ### Security
 
 - Updated the bundled `undici` to 6.29.1 to fix multiple vulnerabilities (TLS
@@ -79,7 +83,8 @@ and this project adheres to
 
 - Initial release.
 
-[Unreleased]: https://github.com/osiegmar/ses-sync-action/compare/v2.0.1...main
+[Unreleased]: https://github.com/osiegmar/ses-sync-action/compare/v2.0.2...main
+[2.0.2]: https://github.com/osiegmar/ses-sync-action/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/osiegmar/ses-sync-action/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/osiegmar/ses-sync-action/compare/v1.0.2...v2.0.0
 [1.0.2]: https://github.com/osiegmar/ses-sync-action/compare/v1.0.1...v1.0.2
