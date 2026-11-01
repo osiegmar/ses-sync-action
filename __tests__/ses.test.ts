@@ -78,16 +78,11 @@ describe('SES', () => {
       expect(mockSend).toHaveBeenCalledTimes(2)
     })
 
-    it('should throw on non-200 status', async () => {
-      mockSend.mockResolvedValueOnce({
-        $metadata: { httpStatusCode: 403 },
-        TemplatesMetadata: []
-      })
+    it('should propagate SDK errors', async () => {
+      mockSend.mockRejectedValueOnce(new Error('AccessDenied'))
 
       const ses = new SES()
-      await expect(ses.listTemplates()).rejects.toThrow(
-        'Failed to list templates'
-      )
+      await expect(ses.listTemplates()).rejects.toThrow('AccessDenied')
     })
 
     it('should handle empty TemplatesMetadata', async () => {
@@ -134,14 +129,12 @@ describe('SES', () => {
       expect(mockSend).toHaveBeenCalledTimes(1)
     })
 
-    it('should throw on non-200 status', async () => {
-      mockSend.mockResolvedValueOnce({
-        $metadata: { httpStatusCode: 500 }
-      })
+    it('should propagate SDK errors', async () => {
+      mockSend.mockRejectedValueOnce(new Error('LimitExceeded'))
 
       const ses = new SES()
       await expect(ses.createTemplate(makeTemplate())).rejects.toThrow(
-        'Failed to create template welcome'
+        'LimitExceeded'
       )
     })
   })
@@ -159,14 +152,12 @@ describe('SES', () => {
       expect(mockSend).toHaveBeenCalledTimes(1)
     })
 
-    it('should throw on non-200 status', async () => {
-      mockSend.mockResolvedValueOnce({
-        $metadata: { httpStatusCode: 500 }
-      })
+    it('should propagate SDK errors', async () => {
+      mockSend.mockRejectedValueOnce(new Error('LimitExceeded'))
 
       const ses = new SES()
       await expect(ses.updateTemplate(makeTemplate())).rejects.toThrow(
-        'Failed to update template welcome'
+        'LimitExceeded'
       )
     })
   })

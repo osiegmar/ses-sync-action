@@ -17,10 +17,11 @@ export class SES {
   }
 
   async listTemplates(): Promise<string[]> {
-    let templates: string[] = []
+    const templates: string[] = []
 
     let NextToken: string | undefined = undefined
     for (;;) {
+      // the SDK throws on non-2xx responses
       const response: ListEmailTemplatesCommandOutput = await this.client.send(
         new ListEmailTemplatesCommand({
           PageSize: 100,
@@ -28,15 +29,9 @@ export class SES {
         })
       )
 
-      if (response.$metadata.httpStatusCode !== 200) {
-        throw new Error(
-          `Failed to list templates: SES responded with status ${response.$metadata.httpStatusCode}`
-        )
-      }
-
       for (const e of response.TemplatesMetadata ?? []) {
         if (e.TemplateName) {
-          templates = templates.concat(e.TemplateName)
+          templates.push(e.TemplateName)
         }
       }
 
@@ -61,13 +56,7 @@ export class SES {
         Text: localTemplate.text
       }
     })
-    const response = await this.client.send(command)
-
-    if (response.$metadata.httpStatusCode !== 200) {
-      throw new Error(
-        `Failed to create template ${localTemplate.basename}: SES responded with status ${response.$metadata.httpStatusCode}`
-      )
-    }
+    await this.client.send(command)
   }
 
   async updateTemplate(localTemplate: LocalTemplate): Promise<void> {
@@ -81,12 +70,6 @@ export class SES {
         Text: localTemplate.text
       }
     })
-    const response = await this.client.send(command)
-
-    if (response.$metadata.httpStatusCode !== 200) {
-      throw new Error(
-        `Failed to update template ${localTemplate.basename}: SES responded with status ${response.$metadata.httpStatusCode}`
-      )
-    }
+    await this.client.send(command)
   }
 }
