@@ -40083,19 +40083,17 @@ class SES {
         this.client = new SESv2Client({ maxAttempts: 10 });
     }
     async listTemplates() {
-        let templates = [];
+        const templates = [];
         let NextToken = undefined;
         for (;;) {
+            // the SDK throws on non-2xx responses
             const response = await this.client.send(new ListEmailTemplatesCommand({
                 PageSize: 100,
                 NextToken
             }));
-            if (response.$metadata.httpStatusCode !== 200) {
-                throw new Error(`Failed to list templates: SES responded with status ${response.$metadata.httpStatusCode}`);
-            }
             for (const e of response.TemplatesMetadata ?? []) {
                 if (e.TemplateName) {
-                    templates = templates.concat(e.TemplateName);
+                    templates.push(e.TemplateName);
                 }
             }
             if (response.NextToken === undefined) {
@@ -40115,10 +40113,7 @@ class SES {
                 Text: localTemplate.text
             }
         });
-        const response = await this.client.send(command);
-        if (response.$metadata.httpStatusCode !== 200) {
-            throw new Error(`Failed to create template ${localTemplate.basename}: SES responded with status ${response.$metadata.httpStatusCode}`);
-        }
+        await this.client.send(command);
     }
     async updateTemplate(localTemplate) {
         info(`Updating template ${localTemplate.basename}`);
@@ -40130,10 +40125,7 @@ class SES {
                 Text: localTemplate.text
             }
         });
-        const response = await this.client.send(command);
-        if (response.$metadata.httpStatusCode !== 200) {
-            throw new Error(`Failed to update template ${localTemplate.basename}: SES responded with status ${response.$metadata.httpStatusCode}`);
-        }
+        await this.client.send(command);
     }
 }
 
@@ -40143,6 +40135,11 @@ async function findTemplates(srcDir) {
     for (const file of files) {
         if (file.endsWith('.json')) {
             const basename = file.substring(0, file.length - 5);
+            for (const ext of ['html', 'txt']) {
+                if (!files.includes(`${basename}.${ext}`)) {
+                    throw new Error(`Template ${basename} is missing ${basename}.${ext}`);
+                }
+            }
             templates.push(new LocalTemplate(srcDir, basename));
         }
     }
@@ -40161,6 +40158,9 @@ class LocalTemplate {
     get subject() {
         const config = fs$1.readFileSync(`${this._path}/${this._basename}.json`, 'utf8');
         const data = JSON.parse(config);
+        if (typeof data.subject !== 'string') {
+            throw new Error(`Template ${this._basename}.json lacks a string "subject" property`);
+        }
         return data.subject;
     }
     get html() {
@@ -40191,9 +40191,7 @@ async function run() {
         info('Finished');
     }
     catch (error) {
-        if (error instanceof Error) {
-            setFailed(error.message);
-        }
+        setFailed(error instanceof Error ? error.message : String(error));
     }
 }
 
