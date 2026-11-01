@@ -3,7 +3,7 @@ author: 'Oliver Siegmar'
 description: 'Sync email templates to Amazon Simple Email Service (SES)'
 inputs:
   dir:
-    description: 'Source directory read files from'
+    description: 'Source directory to read templates from'
     required: true
 runs:
   using: 'node24'
