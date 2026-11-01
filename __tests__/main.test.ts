@@ -106,6 +106,14 @@ describe('run', () => {
     expect(mockSetFailed).toHaveBeenCalledWith('SES unavailable')
   })
 
+  it('should call setFailed on non-Error throw', async () => {
+    mockListTemplates.mockRejectedValue('boom')
+
+    await run()
+
+    expect(mockSetFailed).toHaveBeenCalledWith('boom')
+  })
+
   it('should read dir input', async () => {
     mockGetInput.mockReturnValue('/my/templates')
     mockListTemplates.mockResolvedValue([])
